@@ -20,7 +20,7 @@ client.on('ready', () => {
 
 client.on('interactionCreate', async (interaction) => {
   if (interaction.commandName === 'stock') {
-    const stock = interaction.options.getString('stock');
+    const stock = interaction.options.getString('symbol');
     const stockPrice = await getStock(stock);
     interaction.reply({ content: stockPrice });
   } else if (interaction.commandName === 'help') {
