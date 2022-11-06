@@ -8,7 +8,7 @@ const getStock = async (symbol) => {
   try {
     const getData = await axios.get(url);
     const data = await getData.data;
-    const stockPrice = parseFloat(data.values[0].high);
+    const stockPrice = parseFloat(data.values[0].close);
     return `${symbol.toUpperCase()}: $${stockPrice.toFixed(2)}`;
   } catch (err) {
     return `${symbol.toUpperCase()} is an invalid Stock`;
