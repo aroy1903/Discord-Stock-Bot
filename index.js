@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits, Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
-const getStock = require('./getStock');
+const { getStock, getCoin } = require('./stockCrypto');
 require('dotenv').config();
 
 const { TOKEN, GUILD_ID, CLIENT_ID } = process.env;
@@ -19,24 +19,42 @@ client.on('ready', () => {
 });
 
 client.on('interactionCreate', async (interaction) => {
-  if (interaction.commandName === 'get') {
+  if (interaction.commandName === 'stock') {
     const stock = interaction.options.getString('stock');
     const stockPrice = await getStock(stock);
     interaction.reply({ content: stockPrice });
   } else if (interaction.commandName === 'help') {
-    interaction.reply({ content: 'Enter a stocks symbols to get its value' });
+    interaction.reply({
+      content: `Enter a stocks symbols to get its value or enter a crytocurrency's symbol`,
+    });
+  } else if (interaction.commandName === 'crypto') {
+    const coin = interaction.options.getString('coin');
+    const coinVal = await getCoin(coin);
+    interaction.reply({ content: coinVal });
   }
 });
 
 (async function main() {
   const commands = [
     {
-      name: 'get',
-      description: 'Enter a stocks symbols to get its value',
+      name: 'stock',
+      description: 'Enter a stocks symbols to get its value in USD',
       options: [
         {
-          name: 'stock',
+          name: 'symbol',
           description: 'A valid US Stock symbol',
+          type: 3,
+          required: true,
+        },
+      ],
+    },
+    {
+      name: 'crypto',
+      description: 'Enter a valid crypto coin to get its value in USD',
+      options: [
+        {
+          name: 'coin',
+          description: 'A valid coin',
           type: 3,
           required: true,
         },
